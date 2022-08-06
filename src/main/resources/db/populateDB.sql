@@ -20,6 +20,11 @@ VALUES ('USER', 100000),
        ('USER', 100001),
        ('ADMIN', 100001);
 
+INSERT INTO RESTAURANT_VOTES (USER_ID, VOTE_DATE, RESTAURANT_ID)
+VALUES (100000, CURRENT_DATE, 100003),
+       (100001, CURRENT_DATE, 100004),
+       (100002, CURRENT_DATE, 100004);
+
 INSERT INTO meals (description, price, restaurant_id)
 VALUES ('Цыпленок табака', 500, 100003),
        ('Куриный шашлык', 700, 100003),
