@@ -1,11 +1,11 @@
 package ru.serpov.restaurant_voting.model;
 
 import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
+import org.hibernate.annotations.*;
 import ru.serpov.restaurant_voting.HasId;
 
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.util.List;
@@ -13,7 +13,7 @@ import java.util.List;
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Entity
 @Table(name = "restaurants")
-public class Restaurant extends NamedEntity implements HasId {
+public class Restaurant extends BaseEntity implements HasId {
 
     @NotBlank
     @Column(name = "description")
@@ -24,6 +24,10 @@ public class Restaurant extends NamedEntity implements HasId {
     private String address;
 
     @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id")
+    @CollectionTable(name = "meals",
+            joinColumns = @JoinColumn(name = "id"),
+            uniqueConstraints = @UniqueConstraint(columnNames = {"description", "registered"}, name = "uk_meal_date"))
     @OnDelete(action = OnDeleteAction.CASCADE)
     private List<Meal> meals;
 
@@ -31,12 +35,11 @@ public class Restaurant extends NamedEntity implements HasId {
     }
 
     public Restaurant(String description, String address) {
-        this(null, null, description, address);
+        this(null, description, address);
     }
 
-    public Restaurant(Integer id, String name, String description, String address) {
-        super(id, name);
-        this.name = name;
+    public Restaurant(Integer id, String description, String address) {
+        super(id);
         this.description = description;
         this.address = address;
     }

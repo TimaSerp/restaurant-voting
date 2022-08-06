@@ -1,15 +1,13 @@
 package ru.serpov.restaurant_voting.model;
 
-import org.hibernate.annotations.*;
 import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.*;
 import org.springframework.util.CollectionUtils;
 import ru.serpov.restaurant_voting.HasIdAndEmail;
 
-import javax.persistence.*;
 import javax.persistence.Entity;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -19,20 +17,11 @@ import java.io.Serializable;
 import java.util.*;
 
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-@NamedQueries({
-        @NamedQuery(name = User.DELETE, query = "DELETE FROM User u WHERE u.id=:id"),
-        @NamedQuery(name = User.BY_EMAIL, query = "SELECT u FROM User u LEFT JOIN FETCH u.roles WHERE u.email=?1"),
-        @NamedQuery(name = User.ALL_SORTED, query = "SELECT u FROM User u ORDER BY u.name, u.email"),
-})
 @Entity
 @Table(name = "users")
 public class User extends NamedEntity implements HasIdAndEmail, Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
-
-    public static final String DELETE = "User.delete";
-    public static final String BY_EMAIL = "User.getByEmail";
-    public static final String ALL_SORTED = "User.getAllSorted";
 
     @Column(name = "email", nullable = false, unique = true)
     @Email
@@ -60,38 +49,28 @@ public class User extends NamedEntity implements HasIdAndEmail, Serializable {
     @Column(name = "role")
     @ElementCollection(fetch = FetchType.EAGER)
     @BatchSize(size = 200)
-    @JoinColumn(name = "id")
+    @JoinColumn
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<Role> roles;
 
-    @OneToOne
-    @JoinColumn(name = "restaurant_vote_id")
-    private Restaurant vote;
+    public User() {
+    }
 
-    public User() {}
-
-    public User(User u){this(u.id, u.name, u.email, u.password, u.registered, u.enabled, u.roles, u.vote);}
+    public User(User u) {
+        this(u.id, u.name, u.email, u.password, u.registered, u.enabled, u.roles);
+    }
 
     public User(Integer id, String name, String email, String password, Role... roles) {
-        this(id, name, email, password, new Date(), true, Arrays.asList((roles)), null);
+        this(id, name, email, password, new Date(), true, Arrays.asList((roles)));
     }
 
-    public User(Integer id, String name, String email, String password, Date registered, boolean enabled, Collection<Role> roles, Restaurant vote) {
+    public User(Integer id, String name, String email, String password, Date registered, boolean enabled, Collection<Role> roles) {
         super(id, name);
-        this.email=email;
-        this.password=password;
-        this.registered=registered;
-        this.enabled=enabled;
+        this.email = email;
+        this.password = password;
+        this.registered = registered;
+        this.enabled = enabled;
         setRoles(roles);
-        this.vote=vote;
-    }
-
-    public Restaurant getVote() {
-        return vote;
-    }
-
-    public void setVote(Restaurant vote) {
-        this.vote = vote;
     }
 
     public String getPassword() {
@@ -129,5 +108,10 @@ public class User extends NamedEntity implements HasIdAndEmail, Serializable {
     @Override
     public String getEmail() {
         return email;
+    }
+
+    @Override
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

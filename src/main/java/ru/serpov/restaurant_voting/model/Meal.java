@@ -1,17 +1,22 @@
 package ru.serpov.restaurant_voting.model;
 
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.validator.constraints.Range;
+import ru.serpov.restaurant_voting.HasId;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.time.LocalDateTime;
 
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Entity
 @Table(name = "meals")
-public class Meal extends BaseEntity {
+public class Meal extends BaseEntity implements HasId {
     @NotBlank
     @Column(name = "description", nullable = false)
     @Size(min = 2, max = 120)
@@ -19,13 +24,32 @@ public class Meal extends BaseEntity {
 
     @Column(name = "price", nullable = false)
     @Range(min = 10, max = 5000)
-    private int price;
+    private Integer price;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @Column(name = "registered", nullable = false, columnDefinition = "date default now()", updatable = false)
+    @NotNull
+    private LocalDateTime registered;
+
+    @ManyToOne
     @JoinColumn(name = "restaurant_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @NotNull
     private Restaurant restaurant;
+
+    public Meal() {
+    }
+
+    public Meal(String description, int price, LocalDateTime registered, Restaurant restaurant) {
+        this(null, description, price, registered, restaurant);
+    }
+
+    public Meal(Integer id, String description, int price, LocalDateTime registered, Restaurant restaurant) {
+        super(id);
+        this.description = description;
+        this.price = price;
+        this.registered = registered;
+        this.restaurant = restaurant;
+    }
 
     public String getDescription() {
         return description;
@@ -37,6 +61,10 @@ public class Meal extends BaseEntity {
 
     public Restaurant getRestaurant() {
         return restaurant;
+    }
+
+    public LocalDateTime getRegistered() {
+        return registered;
     }
 
     public void setDescription(String description) {
