@@ -1,6 +1,6 @@
 package ru.serpov.restaurant_voting.model;
 
-public enum Role{
+public enum Role {
     USER,
     ADMIN
 }

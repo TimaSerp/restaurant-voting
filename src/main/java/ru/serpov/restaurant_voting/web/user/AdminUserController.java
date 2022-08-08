@@ -8,11 +8,12 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-import ru.serpov.restaurant_voting.error.NotFoundException;
+import ru.serpov.restaurant_voting.error.IllegalRequestDataException;
 import ru.serpov.restaurant_voting.model.User;
 import ru.serpov.restaurant_voting.util.ValidationUtil;
 
 import java.util.List;
+import java.util.Optional;
 
 import static ru.serpov.restaurant_voting.util.ValidationUtil.checkNew;
 
@@ -61,8 +62,9 @@ public class AdminUserController extends AbstractUserController {
     }
 
     @GetMapping("/by-email")
-    public User getByEmail(@RequestParam String email) {
+    public Optional<User> getByEmail(@RequestParam String email) {
         log.info("Get by Email {}", email);
-        return repository.getByEmail(email).orElseThrow(() -> new NotFoundException("User with email " + email + " doesn't exist"));
+        return Optional.ofNullable(repository.getByEmail(email).orElseThrow(() -> new IllegalRequestDataException
+                ("User with email " + email + " doesn't exist")));
     }
 }

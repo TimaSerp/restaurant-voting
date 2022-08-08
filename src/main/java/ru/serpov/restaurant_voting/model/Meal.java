@@ -11,7 +11,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Entity
@@ -28,7 +28,7 @@ public class Meal extends BaseEntity implements HasId {
 
     @Column(name = "registered", nullable = false, columnDefinition = "date default now()", updatable = false)
     @NotNull
-    private LocalDateTime registered;
+    private LocalDate registered;
 
     @ManyToOne
     @JoinColumn(name = "restaurant_id", nullable = false)
@@ -39,11 +39,15 @@ public class Meal extends BaseEntity implements HasId {
     public Meal() {
     }
 
-    public Meal(String description, int price, LocalDateTime registered, Restaurant restaurant) {
+    public Meal(Meal meal) {
+        this(meal.id(), meal.getDescription(), meal.getPrice(), meal.getRegistered(), meal.getRestaurant());
+    }
+
+    public Meal(String description, int price, LocalDate registered, Restaurant restaurant) {
         this(null, description, price, registered, restaurant);
     }
 
-    public Meal(Integer id, String description, int price, LocalDateTime registered, Restaurant restaurant) {
+    public Meal(Integer id, String description, int price, LocalDate registered, Restaurant restaurant) {
         super(id);
         this.description = description;
         this.price = price;
@@ -63,7 +67,7 @@ public class Meal extends BaseEntity implements HasId {
         return restaurant;
     }
 
-    public LocalDateTime getRegistered() {
+    public LocalDate getRegistered() {
         return registered;
     }
 

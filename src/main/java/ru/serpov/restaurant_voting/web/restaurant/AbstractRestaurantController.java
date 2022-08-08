@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
-import ru.serpov.restaurant_voting.error.NotFoundException;
+import ru.serpov.restaurant_voting.error.IllegalRequestDataException;
 import ru.serpov.restaurant_voting.model.Restaurant;
 import ru.serpov.restaurant_voting.repository.RestaurantRepository;
 
@@ -20,11 +20,11 @@ public abstract class AbstractRestaurantController {
 
     public Restaurant get(int id) {
         log.info("Get restaurant with id {}", id);
-        return repository.findById(id).orElseThrow(() -> new NotFoundException("Restaurant with id " + id + " doesn't exist"));
+        return repository.findById(id).orElseThrow(() -> new IllegalRequestDataException("Restaurant with id " + id + " doesn't exist"));
     }
 
     public List<Restaurant> getAll() {
         log.info("Get all restaurants");
-        return repository.findAll(Sort.by(ASC, "description", "id"));
+        return repository.findAll(Sort.by(ASC, "name", "id"));
     }
 }

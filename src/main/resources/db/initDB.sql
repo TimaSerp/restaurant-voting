@@ -52,3 +52,5 @@ CREATE TABLE meals
     restaurant_id INTEGER            NOT NULL,
     FOREIGN KEY (restaurant_id) REFERENCES restaurants (id) ON DELETE CASCADE
 );
+CREATE UNIQUE INDEX meals_unique_meal_per_day_idx
+    ON meals (description, registered, restaurant_id);

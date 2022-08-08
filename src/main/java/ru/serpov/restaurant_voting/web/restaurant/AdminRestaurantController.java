@@ -15,7 +15,7 @@ import static ru.serpov.restaurant_voting.util.ValidationUtil.assureIdConsistent
 import static ru.serpov.restaurant_voting.util.ValidationUtil.checkNew;
 
 @RestController
-@RequestMapping(value = AdminRestaurantController.REST_URL, consumes = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = AdminRestaurantController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 @CacheConfig(cacheNames = "restaurants")
 public class AdminRestaurantController extends AbstractRestaurantController {
     private static final Logger log = LoggerFactory.getLogger(AbstractRestaurantController.class);
@@ -46,7 +46,7 @@ public class AdminRestaurantController extends AbstractRestaurantController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable int id) {
         log.info("Delete restaurant with id {}", id);
-        repository.delete(id);
+        repository.deleteExisted(id);
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)

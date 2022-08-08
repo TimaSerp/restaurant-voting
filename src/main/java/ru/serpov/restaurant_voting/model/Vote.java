@@ -27,7 +27,8 @@ public class Vote extends BaseEntity {
     @NotNull
     private Date voteDate;
 
-    public Vote() {}
+    public Vote() {
+    }
 
     public Vote(Date voteDate, Restaurant restaurant, User user) {
         this(null, user, restaurant, voteDate);
