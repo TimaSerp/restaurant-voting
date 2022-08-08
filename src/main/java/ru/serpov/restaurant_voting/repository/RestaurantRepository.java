@@ -13,11 +13,11 @@ public interface RestaurantRepository extends BaseRepository<Restaurant> {
 
     @Transactional
     @Modifying
-    @Query("UPDATE Vote v SET v.user=:user, v.restaurant.id=:id WHERE v.user=:user")
-    void vote(@Param("user") User user, @Param("id") int id);
+    @Query("UPDATE Vote v SET v.user.id=:user_id, v.restaurant.id=:id WHERE v.user.id=:user_id")
+    void vote(@Param("user_id") int userId, @Param("id") int id);
 
-    @Query("SELECT v FROM Vote v WHERE v.user=:user")
-    Vote getVote(@Param("user") User user);
+    @Query("SELECT v FROM Vote v WHERE v.user.id=:user_id")
+    Vote getVote(@Param("user_id") int userId);
 
     @Query("SELECT COUNT(v) FROM Vote v WHERE v.restaurant.id=:id")
     int getVoteCount(@Param("id") int restaurantId);

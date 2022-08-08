@@ -24,14 +24,14 @@ public class UserRestaurantControllerTest {
 
     @Test
     void vote() {
-        controller.vote(user, RESTAURANT_1_ID);
-        Vote vote = controller.getVote(user);
+        controller.vote(RESTAURANT_1_ID);
+        Vote vote = controller.getVote();
         VOTE_MATCHER.assertMatch(vote, new Vote(vote.getId(), user, restaurant1, vote.getVoteDate()));
     }
 
     @Test
     void getVote() {
-        VOTE_MATCHER.assertMatch(controller.getVote(user), VOTE);
+        VOTE_MATCHER.assertMatch(controller.getVote(), VOTE);
     }
 
     @Test
