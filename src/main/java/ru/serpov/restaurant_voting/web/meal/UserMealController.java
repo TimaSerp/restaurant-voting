@@ -10,7 +10,7 @@ import ru.serpov.restaurant_voting.model.Meal;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = UserMealController.REST_URL, consumes = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = UserMealController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 public class UserMealController extends AbstractMealController {
 
     static final String REST_URL = "/restaurants/{restaurant_id}/meals";

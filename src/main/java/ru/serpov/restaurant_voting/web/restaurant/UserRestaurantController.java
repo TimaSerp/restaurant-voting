@@ -8,6 +8,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import ru.serpov.restaurant_voting.model.Restaurant;
 import ru.serpov.restaurant_voting.model.User;
+import ru.serpov.restaurant_voting.model.Vote;
 
 import java.util.List;
 
@@ -33,9 +34,20 @@ public class UserRestaurantController extends AbstractRestaurantController {
 
     @PostMapping(value = "/{restaurant_id}/vote", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void vote(@PathVariable(name = "restaurant_id") int id, @RequestBody User user) {
-        repository.vote(user, id);
+    public void vote(@RequestBody User user, @PathVariable(name = "restaurant_id") int restaurantId) {
+        log.info("{} vote for restaurant with id {}", user, restaurantId);
+        repository.vote(user, restaurantId);
     }
 
+    @GetMapping("/vote")
+    public Vote getVote(User user) {
+        log.info("Get vote for {}", user);
+        return repository.getVote(user);
+    }
 
+    @GetMapping("/{restaurant_id}/votes")
+    public int getVotesCount(@PathVariable("restaurant_id") int restaurantId) {
+        log.info("Get votes count for restaurant with id {}", restaurantId);
+        return repository.getVoteCount(restaurantId);
+    }
 }
